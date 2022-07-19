@@ -19,7 +19,7 @@ from game_mechanics import (
 )
 
 TEAM_NAME = "Team Name"  # <---- Enter your team name here!
-assert TEAM_NAME != "Team Name", "Please change your TEAM_NAME!"
+assert TEAM_NAME != "Team winner", "Please change your TEAM_NAME!"
 
 
 def to_feature_vector(state: np.ndarray) -> Tuple:
@@ -50,52 +50,72 @@ def train() -> Dict:
          {feature_vector: value}. If you structure it another
          way, you'll have to tweak choose_move().
     """
-    raise NotImplementedError("You need to implement this function!")
+    pass
 
 
-def choose_move(state: np.ndarray, value_function: Dict, verbose: bool = False) -> int:
-    """Called during competitive play. It acts greedily given current state of the board and value
-    function dictionary. It returns a single move to play.
+def choose_move(board, value_func):  # <- DO NOT CHANGE THIS LINE :)
+    """Simple rules based solution.
 
-    Args:
-        state: State of the board as a np array. Your pieces are
-                1's, the opponent's are -1's and empty are 0's.
-        value_function: The dictionary output by train().
-        verbose: Whether to print debugging information to console.
-
-    Returns:
-        position (int): The column you want to place your counter
-                        into (an integer 0 -> 7), where 0 is the far
-                        left column and 7 is the far right column.
+    A good RL solution should beat me
     """
-    values = []
-    not_full_cols = [col for col in range(state.shape[1]) if not is_column_full(state, col)]
+    possible_moves = range(board.shape[1])
 
-    for not_full_col in not_full_cols:
-        # Do 1-step lookahead and compare values of successor states
-        state_copy = state.copy()
-        place_piece(board=state_copy, column_idx=not_full_col, player=1)
+    moves_with_full_cols_removed = []
+    for move in possible_moves:
+        if not is_column_full(board, move):
+            moves_with_full_cols_removed.append(move)
 
-        # Get the feature vector associated with the successor state
-        features = to_feature_vector(state_copy)
-        if verbose:
-            print(
-                "Column index:",
-                not_full_col,
-                "Feature vector:",
-                features,
-                "Value:",
-                value_function.get(features, 0),
-            )
+    # 1 Check no moves where we win immediately
+    for move in moves_with_full_cols_removed:
+        # Copy to stop the moves we make affect the original board state
+        copy_board = board.copy()
+        # Let's look at the board when we place a piece at `move`
+        copy_board, row_idx = place_piece(copy_board, move, 1)
+        # Has that `move` won the game?
+        if has_won(copy_board, move):
+            print("1")
+            return move
 
-        # Add the value of the sucessor state to the values list
-        values.append(value_function.get(features, 0))
+    # 2 Blocking - Take moves where we lose if we don't go there
+    for move in moves_with_full_cols_removed:
+        copy_board = board.copy()
+        copy_board, row_idx = place_piece(copy_board, move, -1)
+        if has_won(copy_board, move):
+            print("2")
+            return move
 
-    # Pick randomly between actions that have successor states with the maximum value
-    max_value = max(values)
-    value_indices = [index for index, value in enumerate(values) if value == max_value]
-    value_index = random.choice(value_indices)
-    return not_full_cols[value_index]
+    # 3 Avoiding them winning on top - Avoid moves where they win by placing on top
+    # [1, 2, 3, 4, 6, 7]
+    for move in moves_with_full_cols_removed:
+        # Copy to keep the original board clean
+        copy_board = board.copy()
+
+        # Make our move
+        copy_board, row_idx = place_piece(copy_board, move, 1)
+        if not is_column_full(copy_board, move):
+            # They move on top of us!
+            copy_board, row_idx = place_piece(copy_board, move, -1)
+
+            # Checking - have THEY won by placing on top of us?
+            if has_won(copy_board, move):
+                print("3 - removing", move)
+                moves_with_full_cols_removed.remove(move)
+    # [1, 2, 3, 7]
+
+    # 4 Prefer the center columns
+    if 3 in moves_with_full_cols_removed or 4 in moves_with_full_cols_removed:
+        center_cols = []
+        # Try
+        if 3 in moves_with_full_cols_removed:
+            center_cols.append(3)
+        if 4 in moves_with_full_cols_removed:
+            center_cols.append(4)
+        print("4")
+        return random.choice(center_cols)
+
+    # 5 Random!
+    print("5")
+    return random.choice(moves_with_full_cols_removed)  # <- this is the bug
 
 
 if __name__ == "__main__":
@@ -124,5 +144,5 @@ if __name__ == "__main__":
         opponent_choose_move=choose_move_randomly,
         game_speed_multiplier=1,
         render=True,
-        verbose=False,
+        verbose=True,
     )
