@@ -4,6 +4,8 @@
 run.py
 
 # Custom
+team_*.py
+!team_winner.py
 src/**/competitor_code/team_*
 !src/**/competitor_code/team_winner.py
 src/**/competitor_code/*_network
