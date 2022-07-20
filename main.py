@@ -3,7 +3,7 @@ from typing import Dict, Tuple
 
 import numpy as np
 
-# from check_submission import check_submission
+from check_submission import check_submission
 from game_mechanics import (
     Connect4Env,
     choose_move_randomly,
@@ -37,7 +37,8 @@ def to_feature_vector(state: np.ndarray) -> Tuple:
 
     Returns: the feature for this state, as designed by you.
     """
-    raise NotImplementedError("You need to implement the to_feature_vector() function! :)")
+    raise NotImplementedError(
+        "You need to implement the to_feature_vector() function! :)")
 
 
 def train() -> Dict:
@@ -53,7 +54,9 @@ def train() -> Dict:
     raise NotImplementedError("You need to implement this function!")
 
 
-def choose_move(state: np.ndarray, value_function: Dict, verbose: bool = False) -> int:
+def choose_move(state: np.ndarray,
+                value_function: Dict,
+                verbose: bool = False) -> int:
     """Called during competitive play. It acts greedily given current state of the board and value
     function dictionary. It returns a single move to play.
 
@@ -69,7 +72,9 @@ def choose_move(state: np.ndarray, value_function: Dict, verbose: bool = False) 
                         left column and 7 is the far right column.
     """
     values = []
-    not_full_cols = [col for col in range(state.shape[1]) if not is_column_full(state, col)]
+    not_full_cols = [
+        col for col in range(state.shape[1]) if not is_column_full(state, col)
+    ]
 
     for not_full_col in not_full_cols:
         # Do 1-step lookahead and compare values of successor states
@@ -93,7 +98,9 @@ def choose_move(state: np.ndarray, value_function: Dict, verbose: bool = False) 
 
     # Pick randomly between actions that have successor states with the maximum value
     max_value = max(values)
-    value_indices = [index for index, value in enumerate(values) if value == max_value]
+    value_indices = [
+        index for index, value in enumerate(values) if value == max_value
+    ]
     value_index = random.choice(value_indices)
     return not_full_cols[value_index]
 
@@ -104,7 +111,9 @@ if __name__ == "__main__":
     my_value_fn = train()
     save_dictionary(my_value_fn, TEAM_NAME)
 
-    # check_submission()  # <---- Make sure I pass! Or your solution will not work in the tournament!!
+    check_submission(
+        TEAM_NAME
+    )  # <---- Make sure I pass! Or your solution will not work in the tournament!!
 
     my_value_fn = load_dictionary(TEAM_NAME)
 

@@ -2,7 +2,7 @@
 
 Connect 4 is a classic board game.
 
-![Connect 4. Yellow wins with 4 consecutive yellow pieces on a diagonal](./images/connect4board.jpeg)
+![Connect 4. Yellow wins with 4 consecutive yellow pieces on a diagonal](images/connect4board.jpeg)
 
 ## Rules of Connect 4 :red_circle:
 
@@ -12,25 +12,35 @@ Connect 4 is a **two-player** board game. Players take turns dropping colored co
 
 You can play with your teammate here: https://boardgames.io/en/connect4.
 
+Your task is to build a **Reinforcement Learning agent** that plays **Connect 4**
+
 # Competition Rules :crossed_swords:
 
-1. Your task is to build a **Reinforcement Learning agent** that plays **Connect 4**.
-   - You can only store data to be used in a competition in a dictionary (saved in a `.pkl` file by `save_dictionary()`)
-   - In the competition, your agent will call the `choose_move()` function in `main.py` to select a move (`choose_move()` may call other functions in `main.py`)
-   - Any code not in `main.py` will not be used.
-   - We **strongly suggest** you use a feature lookup table. Read `feature_vectors.md` in this repo!
-2. Submission deadline: **4pm GMT, Sunday**.
+1. You must build a **Reinforcement Learning** agent.
+   - Rules-based agents **aren't allowed**!
+2. You can only write code in `main.py` and you can only store data in a dictionary (saved in a `.pkl` file by `save_dictionary()`*)
+    - In the competition, your agent will call the `choose_move()` function in `main.py` to select a move
+    - Any code not in `main.py` **will not be used**.
+    - **Check your submission is valid with `check_submission()`**
+3. Submission deadline: **4pm GMT, Sunday**.
    - You can update your code after submitting, but **not after the deadline**.
    - Check your submission is valid with `check_submission()`
-3. The competition is a knockout tournament where your AI will play other teams' AIs 1-v-1
-   - Each 1-v-1 matchup consists of a **single game** with the **first player to play chosen randomly**.
-   - If the game is a draw, another game will be played with the other player starting first.
 
-The competition & discussion will be in [Gather Town](https://app.gather.town/app/nJwquzJjD4TLKcTy/Delta%20Academy) at **4:30pm GMT on Sunday** (30 mins after submission deadline)!
+  *`save_dictionary()` is a function in `game_mechanics.py`
+
+## Competition Format :crossed_swords:
+
+The competition will consist of your AI playing other teams' AIs 1-v-1 in a knockout tournament.
+
+Each 1-v-1 matchup consists of a **single game** with the **first player to play chosen randomly**. If the game is a draw, another game will be played with the other player starting first.
+
+The competition & discussion will be in [Gather Town](https://app.gather.town/app/nJwquzJjD4TLKcTy/Delta%20Academy) at **5pm GMT on Sunday** (1 hour after submission deadline)!
 
 ![Example knockout tournament tree](./images/tournament_tree.png)
 
 ## Technical Details :hammer:
+
+We strongly suggest you use a feature lookup table. Read `feature_vectors.md` for a short recap of feature vectors.
 
 ### States :yellow_circle:
 
@@ -58,7 +68,7 @@ You received `+1` for winning, `-1` for losing and `0` for a draw. You receive `
 
 <details>
 <summary><code style="white-space:nowrap;">  train()</code></summary>
-Write this to train your value function dictionary from experience in the environment. You can use Monte Carlo or TD learning.
+Write this to train your value function dictionary from experience in the environment. Use TD learning.
 <br />
 <br />
 Output the trained dictionary so it can be saved.

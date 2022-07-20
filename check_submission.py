@@ -8,7 +8,6 @@ from game_mechanics import get_empty_board, load_dictionary
 def check_submission(team_name: str) -> None:
     example_state = get_empty_board()
     expected_choose_move_return_type = int
-    pickle_loader = load_dictionary
     game_mechanics_expected_hash = (
         "832c0f400d2898d5035fb4c0037313ba0ccd95da018e3928389b39ceecef8fb6"
     )
