@@ -37,8 +37,7 @@ def to_feature_vector(state: np.ndarray) -> Tuple:
 
     Returns: the feature for this state, as designed by you.
     """
-    raise NotImplementedError(
-        "You need to implement the to_feature_vector() function! :)")
+    raise NotImplementedError("You need to implement the to_feature_vector() function! :)")
 
 
 def train() -> Dict:
